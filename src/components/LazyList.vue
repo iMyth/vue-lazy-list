@@ -9,7 +9,7 @@
     >
       <LazyListItem
         v-for="item in itemsPool"
-        :key = item.id
+        :key="item.id"
       >
         <div :item="item" :is="itemTemplate" ></div>
       </LazyListItem>
@@ -28,7 +28,7 @@ export default {
   props: {
     listData: {
       type: Array,
-      default: () => [ ...Array(2000).keys() ].map(p => ({
+      default: () => [ ...Array(20000).keys() ].map(p => ({
         id: p,
         label: `test-${p}`
       }))
