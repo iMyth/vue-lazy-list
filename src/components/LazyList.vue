@@ -3,7 +3,7 @@
     @scroll="lazyLoadHandler"
     class="lazy-list"
   >
-    <div ref="lazyContainer"
+    <div
       :style="{ paddingTop: paddingTop, paddingBottom: paddingBottom }"
       class="lazy-list-container"
     >
@@ -54,7 +54,6 @@ export default {
       cacheCount: 28,
       currentIndex: 0,
       lazyLoadHandler: null,
-      lazyContainer: null,
       columnCount: 4
     }
   },
@@ -73,16 +72,15 @@ export default {
       let width = $el.clientWidth
       let height = $el.clientHeight
       this.columnCount = Math.floor((width + this.itemMargin) / (this.itemWidth + this.itemMargin))
-      this.cacheCount = Math.ceil((height / this.itemHeight) * (this.columnCount + 2))
+      this.cacheCount = Math.ceil((height / this.itemHeight) * (this.columnCount + 3))
     },
     lazyLoadList () {
-      let lastItem = this.$refs.lazyContainer
+      let lastItem = this.$el
       if (!lastItem) {
         return
       }
-      let rect = lastItem.getBoundingClientRect()
-      let top = rect.top * -1
-      if (top < 0) {
+      let top = lastItem.scrollTop
+      if (top <= 0) {
         this.currentIndex = 0
       }
       if (top > 0) {
@@ -97,8 +95,6 @@ export default {
     paddingTop () {
       return `${this.currentIndex / this.columnCount * this.itemHeight + this.cacheCount}px`
     },
-    // padding bottom, should be:
-    // Math.ceil(this.listData.length / 4) * line height - ((cacheCount + currentIndex)/ 4 * line height)
     paddingBottom () {
       if (this.listData.length - this.cacheCount - this.currentIndex < 0) {
         return '0px'
